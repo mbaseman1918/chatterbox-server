@@ -18,6 +18,7 @@ var defaultCorsHeaders = {
   'access-control-max-age': 10 // Seconds.
 };
 var data = [];
+var messageCounter = 0;
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   //
@@ -72,18 +73,17 @@ var requestHandler = function(request, response) {
     statusCode = 200;
     response.writeHead(statusCode, headers);
     result = JSON.stringify(data);
-    console.log('this is GET result', result);
     response.end(result);
   } else if (request.method === 'POST' && request.url.includes('/classes/messages')) {
     statusCode = 201;
     request.on('data', (messageSent) => {
       var postData = messageSent.toString('utf8');
       postData = JSON.parse(postData);
-      console.log('1. this is the postData', postData);
+      postData['message_id'] = messageCounter;
+      messageCounter++;
+      postData.roomname = postData.roomname || 'lobby';
       data.push(postData);
-      console.log('2. this is the data in the request.on', data);
       result = JSON.stringify(data);
-      console.log('3. this is result', result);
       response.writeHead(statusCode, headers);
       response.end(result);
     });

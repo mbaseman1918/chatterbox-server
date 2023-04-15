@@ -13,7 +13,7 @@ var MessagesView = {
     Messages
       .items()
       .filter(message => Rooms.isSelected(message.roomname))
-      .each(message => MessagesView.renderMessage(message));
+      .forEach(message => MessagesView.renderMessage(message));
   },
 
   renderMessage: function(message) {
